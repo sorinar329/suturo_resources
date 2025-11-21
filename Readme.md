@@ -81,3 +81,20 @@ before commiting:
 Each new laptop needs the cyclone_ws workspace cloned, built, and sourced.
 Use the same workspace layout as on existing machines.
 
+
+**8. if you see this error in your terminal ignore it**
+
+```
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'failed to resolve symbol 'rmw_event_type_is_supported' in shared library '/home/suturo/cyclone_ws/install/rmw_cyclonedds_cpp/lib/librmw_cyclonedds_cpp.so', at ./src/functions.cpp:152'
+
+with this new error message:
+
+  'Expected lexeme type (19) not found, search ended at index 40, at ./src/rcl/lexer_lookahead.c:239'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+```
