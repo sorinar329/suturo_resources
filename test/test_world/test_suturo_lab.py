@@ -4,8 +4,9 @@ from krrood.entity_query_language.quantify_entity import an
 from semantic_digital_twin.semantic_annotations.semantic_annotations import Floor, Room
 from semantic_digital_twin.world import World
 from semantic_digital_twin.datastructures.prefixed_name import PrefixedName
-from semantic_digital_twin.world_description.world_entity import Body
+from semantic_digital_twin.world_description.world_entity import Body, Region
 
+from suturo_resources.queries import query_kitchen_area, query_living_room_area, query_bed_room_area, query_office_area
 from suturo_resources.suturo_map import load_environment, build_environment_walls, build_environment_furniture
 
 def test_load_environment_returns_world():
@@ -13,22 +14,22 @@ def test_load_environment_returns_world():
     assert isinstance(world, World)
     assert world.root.name == PrefixedName("root")
 
-def test_kitchen_room():
-    #world = World([Room(name=PrefixedName("kitchen"), floor=Floor(name=PrefixedName("floor1")))])
-    world = load_environment()
-    body = let(type_=Body, domain=world.bodies)
-    query = an(entity(body, contains(body.name.name,"kitchen_room")))
-    kitchen_room = list(query.evaluate())[0]
-    kitchen_room : Floor
-    print(kitchen_room)
-    #query = an(entity(body, contains(body.name.name, "kitchen")))
-    #print(*query.evaluate())
 
-def test_living_room():
-    #world = World([Room(name=PrefixedName("kitchen"), floor=Floor(name=PrefixedName("floor1")))])
+def test_areas():
+    """
+    Checks that key room areas can be queried and have valid center and pose.
+    """
     world = load_environment()
-    body = let(type_=Body, domain=world.bodies)
-    query = an(entity(body, contains(body.name.name,"living")))
-    kitchen_room = list(query.evaluate())[0]
-    kitchen_room : Floor
-    print(kitchen_room)
+
+    # List of areas and their query functions
+    area_queries = [
+        ("kitchen", query_kitchen_area),
+        ("living room", query_living_room_area),
+        ("bedroom", query_bed_room_area),
+        ("office", query_office_area),
+    ]
+
+    for area_name, query_func in area_queries:
+        center, pose = query_func(world)
+        assert center is not None, f"{area_name} center should not be None"
+        assert pose is not None, f"{area_name} pose should not be None"
