@@ -41,7 +41,7 @@ jobs:
           cd cognitive_robot_abstract_machine
           source /opt/ros/cram-env/bin/activate
           poetry install
-          cd suturo_resources
+          cd ../suturo_resources
           pip install -r requirements.txt
           pip install -e .
 
